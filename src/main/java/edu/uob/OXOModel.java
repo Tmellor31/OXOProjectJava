@@ -70,6 +70,49 @@ public class OXOModel {
         return cells.get(0).size();
     }
 
+    public void addRow(){
+        int numberOfColumns = cells.get(0).size();
+        cells.add(new ArrayList<OXOPlayer>(numberOfColumns));
+        for (int j = 0; j < numberOfColumns; j++)
+        {
+            cells.get(cells.size() - 1).add(null);
+        }
+    }
+
+    public void addColumn(){
+        for (int i = 0; i < cells.size(); i++)
+        {
+            cells.get(i).add(null);
+        }
+    }
+
+    public void removeRow(){
+        int finalRow = cells.size() - 1;
+        cells.remove(finalRow);
+    }
+
+    public void removeColumn(){
+        for (int i = 0; i < cells.size(); i++)
+        {
+            int finalCol = cells.get(i).size() - 1;
+            cells.get(i).remove(finalCol);
+        }
+    }
+
+
+    public void removeRow(int rowIndex){
+        cells.remove(rowIndex);
+    }
+
+    public void removeColumn(int columnIndex){
+        for (int i = 0; i < cells.size(); i++)
+        {
+            cells.get(i).remove(columnIndex);
+        }
+    }
+
+
+
     public OXOPlayer getCellOwner(int rowNumber, int colNumber) {
         return cells.get(rowNumber).get(colNumber);
     }

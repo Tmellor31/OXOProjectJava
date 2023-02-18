@@ -9,10 +9,10 @@ public class OXOController {
 
     public void handleIncomingCommand(String command) throws OXOMoveException {
         int currentplayer = gameModel.getCurrentPlayerNumber();
-        OXOPlayer player = gameModel.getPlayerByNumber(currentplayer);
+        OXOPlayer movingplayer = gameModel.getPlayerByNumber(currentplayer);
         int rowposition = Character.toLowerCase(command.charAt(0)) - 'a';
         int colposition = Character.getNumericValue(command.charAt(1)) - 1;
-        gameModel.setCellOwner(rowposition, colposition,player);
+        gameModel.setCellOwner(rowposition, colposition,movingplayer);
         //if player == the max number of players
         if (currentplayer == gameModel.getNumberOfPlayers() - 1)
         {
@@ -23,11 +23,96 @@ public class OXOController {
         {
             gameModel.setCurrentPlayerNumber(currentplayer+1);
         }
+        if(checkForWin()){
+            gameModel.setWinner(movingplayer);
+        }
     }
-    public void addRow() {}
-    public void removeRow() {}
-    public void addColumn() {}
-    public void removeColumn() {}
+    public void addRow() {
+        gameModel.addRow();
+    }
+    public void removeRow() {
+        gameModel.removeRow();
+    }
+    public void addColumn() {
+        gameModel.addColumn();
+    }
+    public void removeColumn() {
+        gameModel.removeColumn();
+    }
+
+    public boolean checkForWin() {
+        OXOPlayer lastPlayer = gameModel.getPlayerByNumber((gameModel.getCurrentPlayerNumber() - 1 + gameModel.getNumberOfPlayers()) % gameModel.getNumberOfPlayers());
+        int winThreshold = gameModel.getWinThreshold();
+        int rowCount = gameModel.getNumberOfRows();
+        int colCount = gameModel.getNumberOfColumns();
+
+        // Check rows
+        for (int i = 0; i < rowCount; i++) {
+            int count = 0;
+            for (int j = 0; j < colCount; j++) {
+                if (gameModel.getCellOwner(i, j) == lastPlayer) {
+                    count++;
+                    if (count == winThreshold) {
+                        return true;
+                    }
+                } else {
+                    count = 0;
+                }
+            }
+        }
+
+        // Check columns
+        for (int j = 0; j < colCount; j++) {
+            int count = 0;
+            for (int i = 0; i < rowCount; i++) {
+                if (gameModel.getCellOwner(i, j) == lastPlayer) {
+                    count++;
+                    if (count == winThreshold) {
+                        return true;
+                    }
+                } else {
+                    count = 0;
+                }
+            }
+        }
+
+        // Check diagonal from top left to bottom right
+        for (int i = 0; i <= rowCount - winThreshold; i++) {
+            for (int j = 0; j <= colCount - winThreshold; j++) {
+                int count = 0;
+                for (int k = 0; k < winThreshold; k++) {
+                    if (gameModel.getCellOwner(i + k, j + k) == lastPlayer) {
+                        count++;
+                        if (count == winThreshold) {
+                            return true;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Check diagonal from bottom left to top right
+        for (int i = winThreshold - 1; i < rowCount; i++) {
+            for (int j = 0; j <= colCount - winThreshold; j++) {
+                int count = 0;
+                for (int k = 0; k < winThreshold; k++) {
+                    if (gameModel.getCellOwner(i - k, j + k) == lastPlayer) {
+                        count++;
+                        if (count == winThreshold) {
+                            return true;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void increaseWinThreshold() {}
     public void decreaseWinThreshold() {}
     public void reset() {
@@ -40,5 +125,6 @@ public class OXOController {
           }
         }
         gameModel.setCurrentPlayerNumber(0);
+        gameModel.setWinner(null);
     }
 }
