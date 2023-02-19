@@ -83,14 +83,18 @@ public class OXOModel {
     }
 
     public void removeRow() {
-        int finalRow = cells.size() - 1;
-        cells.remove(finalRow);
+        if (cells.size() > 1) {
+            int finalRow = cells.size() - 1;
+            cells.remove(finalRow);
+        }
     }
 
     public void removeColumn() {
-        for (int i = 0; i < cells.size(); i++) {
-            int finalCol = cells.get(i).size() - 1;
-            cells.get(i).remove(finalCol);
+        if (cells.get(0).size() > 1) {
+            for (int i = 0; i < cells.size(); i++) {
+                int finalCol = cells.get(i).size() - 1;
+                cells.get(i).remove(finalCol);
+            }
         }
     }
 
