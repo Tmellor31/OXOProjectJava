@@ -12,7 +12,9 @@ public class OXOController {
         OXOPlayer movingplayer = gameModel.getPlayerByNumber(currentplayer);
         int rowposition = Character.toLowerCase(command.charAt(0)) - 'a';
         int colposition = Character.getNumericValue(command.charAt(1)) - 1;
-        gameModel.setCellOwner(rowposition, colposition,movingplayer);
+        if(gameModel.getWinner() == null){
+            gameModel.setCellOwner(rowposition, colposition,movingplayer);
+        }
         //if player == the max number of players
         if (currentplayer == gameModel.getNumberOfPlayers() - 1)
         {
