@@ -12,32 +12,36 @@ public class OXOController {
         OXOPlayer movingplayer = gameModel.getPlayerByNumber(currentplayer);
         int rowposition = Character.toLowerCase(command.charAt(0)) - 'a';
         int colposition = Character.getNumericValue(command.charAt(1)) - 1;
-        if(gameModel.getWinner() == null){
-            gameModel.setCellOwner(rowposition, colposition,movingplayer);
+        if (gameModel.getWinner() == null) {
+            gameModel.setCellOwner(rowposition, colposition, movingplayer);
         }
         //if player == the max number of players
-        if (currentplayer == gameModel.getNumberOfPlayers() - 1)
-        {
+        if (currentplayer == gameModel.getNumberOfPlayers() - 1) {
             currentplayer = 0;
             gameModel.setCurrentPlayerNumber(currentplayer);
+        } else {
+            gameModel.setCurrentPlayerNumber(currentplayer + 1);
         }
-        else
-        {
-            gameModel.setCurrentPlayerNumber(currentplayer+1);
-        }
-        if(checkForWin()){
+        if (checkForWin()) {
             gameModel.setWinner(movingplayer);
         }
+        if (checkForDraw()) {
+            gameModel.setGameDrawn();
+        }
     }
+
     public void addRow() {
         gameModel.addRow();
     }
+
     public void removeRow() {
         gameModel.removeRow();
     }
+
     public void addColumn() {
         gameModel.addColumn();
     }
+
     public void removeColumn() {
         gameModel.removeColumn();
     }
@@ -115,18 +119,39 @@ public class OXOController {
         return false;
     }
 
-    public void increaseWinThreshold() {}
-    public void decreaseWinThreshold() {}
+
+    public boolean checkForDraw() {
+        int rowCount = gameModel.getNumberOfRows();
+        int colCount = gameModel.getNumberOfColumns();
+        int emptyCells = 0;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < colCount; j++) {
+                if (gameModel.getCellOwner(i, j) == null) {
+                    emptyCells++;
+                }
+            }
+        }
+        //Returns true if there is a draw and false otherwise
+        return emptyCells == 0;
+    }
+
+
+    public void increaseWinThreshold() {
+    }
+
+    public void decreaseWinThreshold() {
+    }
+
     public void reset() {
         int rowcount;
         int colcount;
-        for (rowcount = 0; rowcount < gameModel.getNumberOfRows();rowcount++)
-        {
-          for (colcount = 0; colcount < gameModel.getNumberOfColumns();colcount++){
-              gameModel.setCellOwner(rowcount,colcount,null);
-          }
+        for (rowcount = 0; rowcount < gameModel.getNumberOfRows(); rowcount++) {
+            for (colcount = 0; colcount < gameModel.getNumberOfColumns(); colcount++) {
+                gameModel.setCellOwner(rowcount, colcount, null);
+            }
         }
         gameModel.setCurrentPlayerNumber(0);
         gameModel.setWinner(null);
+        gameModel.resetGameDraw();
     }
 }
