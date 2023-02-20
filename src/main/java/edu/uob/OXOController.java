@@ -1,5 +1,7 @@
 package edu.uob;
 
+import edu.uob.OXOMoveException.*;
+
 public class OXOController {
     OXOModel gameModel;
 
@@ -8,27 +10,35 @@ public class OXOController {
     }
 
     public void handleIncomingCommand(String command) throws OXOMoveException {
-        int currentplayer = gameModel.getCurrentPlayerNumber();
-        OXOPlayer movingplayer = gameModel.getPlayerByNumber(currentplayer);
-        int rowposition = Character.toLowerCase(command.charAt(0)) - 'a';
-        int colposition = Character.getNumericValue(command.charAt(1)) - 1;
+        int currentPlayer = gameModel.getCurrentPlayerNumber();
+        OXOPlayer movingPlayer = gameModel.getPlayerByNumber(currentPlayer);
+        int rowPosition = Character.toLowerCase(command.charAt(0)) - 'a';
+        int colPosition = Character.getNumericValue(command.charAt(1)) - 1;
+        validateInput(rowPosition, colPosition);
         if (gameModel.getWinner() == null) {
-            gameModel.setCellOwner(rowposition, colposition, movingplayer);
+            gameModel.setCellOwner(rowPosition, colPosition, movingPlayer);
         }
         //if player == the max number of players
-        if (currentplayer == gameModel.getNumberOfPlayers() - 1) {
-            currentplayer = 0;
-            gameModel.setCurrentPlayerNumber(currentplayer);
+        if (currentPlayer == gameModel.getNumberOfPlayers() - 1) {
+            currentPlayer = 0;
+            gameModel.setCurrentPlayerNumber(currentPlayer);
         } else {
-            gameModel.setCurrentPlayerNumber(currentplayer + 1);
+            gameModel.setCurrentPlayerNumber(currentPlayer + 1);
         }
         if (checkForWin()) {
-            gameModel.setWinner(movingplayer);
+            gameModel.setWinner(movingPlayer);
         }
         if (checkForDraw()) {
             gameModel.setGameDrawn();
         }
     }
+
+    public void validateInput(int rowPosition, int colPosition) throws OXOMoveException {
+        if (gameModel.getCellOwner(rowPosition, colPosition) != null) {
+            throw new CellAlreadyTakenException(rowPosition, colPosition);
+        }
+    }
+
 
     public void addRow() {
         gameModel.addRow();
