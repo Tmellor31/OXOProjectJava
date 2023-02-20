@@ -14,7 +14,9 @@ public class OXOController {
         OXOPlayer movingPlayer = gameModel.getPlayerByNumber(currentPlayer);
         int rowPosition = Character.toLowerCase(command.charAt(0)) - 'a';
         int colPosition = Character.getNumericValue(command.charAt(1)) - 1;
-        validateInput(rowPosition, colPosition);
+        int commandLength = command.length();
+
+        validateInput(rowPosition, colPosition, commandLength);
         if (gameModel.getWinner() == null) {
             gameModel.setCellOwner(rowPosition, colPosition, movingPlayer);
         }
@@ -33,7 +35,16 @@ public class OXOController {
         }
     }
 
-    public void validateInput(int rowPosition, int colPosition) throws OXOMoveException {
+    public void validateInput(int rowPosition, int colPosition, int commandLength) throws OXOMoveException {
+        int rowCount = gameModel.getNumberOfRows();
+        int colCount = gameModel.getNumberOfColumns();
+        if (commandLength != 2) {
+            throw new InvalidIdentifierLengthException(commandLength);
+        }
+        if (rowPosition < 0 || rowPosition >= rowCount || colPosition < 0 || colPosition >= colCount) {
+            throw new OutsideCellRangeException(rowPosition >= rowCount ? RowOrColumn.ROW : RowOrColumn.COLUMN,
+                    rowPosition >= rowCount ? rowPosition - rowCount : colPosition - colCount);
+        }
         if (gameModel.getCellOwner(rowPosition, colPosition) != null) {
             throw new CellAlreadyTakenException(rowPosition, colPosition);
         }
