@@ -74,12 +74,14 @@ public class OXOModel {
         for (int j = 0; j < numberOfColumns; j++) {
             cells.get(cells.size() - 1).add(null);
         }
+        resetGameDraw();
     }
 
     public void addColumn() {
         for (int i = 0; i < cells.size(); i++) {
             cells.get(i).add(null);
         }
+        resetGameDraw();
     }
 
     public void removeRow() {

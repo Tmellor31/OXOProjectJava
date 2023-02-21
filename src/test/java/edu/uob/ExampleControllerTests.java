@@ -59,6 +59,34 @@ class ExampleControllerTests {
     String failedTestComment = "Winner was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
     assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
   }
+  @Test
+  void testAdditionalPlayers() throws OXOMoveException {
+    model.addPlayer(new OXOPlayer('J'));
+
+    OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    sendCommandToController("c1"); //First Player Move
+    OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    sendCommandToController("c2"); //Second Player Move
+    OXOPlayer thirdMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    sendCommandToController("c3"); //Third Player Move
+    sendCommandToController("b2"); //First Player Again
+    sendCommandToController("b1"); //Second Player
+    sendCommandToController("b3"); //Third Player
+    sendCommandToController("a1"); //First Player
+    sendCommandToController("a2"); //Second Player
+    sendCommandToController("a3"); //Third Player
+
+    String failedTestNotification = "Expected winner was " + thirdMovingPlayer.getPlayingLetter();
+    assertEquals(thirdMovingPlayer, model.getWinner(), failedTestNotification);
+
+    //Only removes first 2 players
+    controller.reset();
+
+    //add 26 players (all letters)
+    for(char c = 'a';c <= 'z'; c++){
+      model.addPlayer(new OXOPlayer(c));
+    }
+  }
 
   // Example of how to test for the throwing of exceptions
   @Test
@@ -67,5 +95,6 @@ class ExampleControllerTests {
     String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `abc123`";
     // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
     assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
+    assertThrows(InvalidIdentifierLengthException.class, ()-> controller.handleIncomingCommand("aa1"));
   }
 }

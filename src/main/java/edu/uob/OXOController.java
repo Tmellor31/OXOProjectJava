@@ -12,10 +12,20 @@ public class OXOController {
     public void handleIncomingCommand(String command) throws OXOMoveException {
         int currentPlayer = gameModel.getCurrentPlayerNumber();
         OXOPlayer movingPlayer = gameModel.getPlayerByNumber(currentPlayer);
-        int rowPosition = Character.toLowerCase(command.charAt(0)) - 'a';
-        int colPosition = Character.getNumericValue(command.charAt(1)) - 1;
-
-        validateInput(rowPosition, colPosition, command);
+        char row = Character.toLowerCase(command.charAt(0));
+        char col = command.charAt(1);
+        int rowPosition = row - 'a';
+        int colPosition = Character.getNumericValue(col) - 1;
+        if (command.length() != 2) {
+            throw new InvalidIdentifierLengthException(command.length());
+        }
+        if (row < 'a' || row > 'i') {
+            throw new InvalidIdentifierCharacterException(RowOrColumn.ROW, row);
+        }
+        if (col < '1' || col > '9') {
+            throw new InvalidIdentifierCharacterException(RowOrColumn.COLUMN, col);
+        }
+        validateInput(rowPosition, colPosition);
         if (gameModel.getWinner() == null) {
             gameModel.setCellOwner(rowPosition, colPosition, movingPlayer);
         }
@@ -34,18 +44,9 @@ public class OXOController {
         }
     }
 
-    public void validateInput(int rowPosition, int colPosition, String command) throws OXOMoveException {
+    public void validateInput(int rowPosition, int colPosition) throws OXOMoveException {
         int rowCount = gameModel.getNumberOfRows();
         int colCount = gameModel.getNumberOfColumns();
-        if (command.length() != 2) {
-            throw new InvalidIdentifierLengthException(command.length());
-        }
-        /*char firstChar = Character.toLowerCase(command.charAt(0));
-        char secondChar = command.charAt(1);
-
-        if (firstChar < 'a' || firstChar > 'i' || secondChar < '1' || secondChar > '9') {
-            throw new InvalidIdentifierCharacterException();
-        }*/
         if (rowPosition < 0 || rowPosition >= rowCount || colPosition < 0 || colPosition >= colCount) {
             throw new OutsideCellRangeException(rowPosition >= rowCount ? RowOrColumn.ROW : RowOrColumn.COLUMN,
                     rowPosition >= rowCount ? rowPosition - rowCount : colPosition - colCount);
@@ -163,9 +164,13 @@ public class OXOController {
 
 
     public void increaseWinThreshold() {
+        gameModel.setWinThreshold(gameModel.getWinThreshold() + 1);
     }
 
     public void decreaseWinThreshold() {
+        if (gameModel.getWinThreshold() > 3 && checkForDraw()) {
+            gameModel.setWinThreshold((gameModel.getWinThreshold() - 1));
+        }
     }
 
     public void reset() {
