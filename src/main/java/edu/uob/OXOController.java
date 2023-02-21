@@ -151,7 +151,7 @@ public class OXOController {
     }
 
     public void decreaseWinThreshold() {
-        if (gameModel.getWinThreshold() > 3 && !gameModel.checkForDraw()) //Check for draw to make sure the game has started
+        if (gameModel.getWinThreshold() > 3 && gameModel.checkForClearBoard() == 0) //Can only be decreased if game hasn't started
         {
             gameModel.setWinThreshold((gameModel.getWinThreshold() - 1));
         }

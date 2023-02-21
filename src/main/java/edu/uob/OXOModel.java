@@ -134,6 +134,21 @@ public class OXOModel {
         return gameDrawn;
     }
 
+    public int checkForClearBoard() {
+        int rowCount = getNumberOfRows();
+        int colCount = getNumberOfColumns();
+        int claimedCells = 0;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < colCount; j++) {
+                if (getCellOwner(i, j) != null) {
+                    claimedCells++;
+                }
+            }
+        }
+        return claimedCells; //Returns 0 if board is clear and the total claimed spaces otherwise
+    }
+
+
     public boolean checkForDraw() {
         int rowCount = getNumberOfRows();
         int colCount = getNumberOfColumns();
