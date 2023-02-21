@@ -106,18 +106,6 @@ public class OXOModel {
         }
     }
 
-
-    public void removeRow(int rowIndex) {
-        cells.remove(rowIndex);
-    }
-
-    public void removeColumn(int columnIndex) {
-        for (int i = 0; i < cells.size(); i++) {
-            cells.get(i).remove(columnIndex);
-        }
-    }
-
-
     public OXOPlayer getCellOwner(int rowNumber, int colNumber) {
         return cells.get(rowNumber).get(colNumber);
     }

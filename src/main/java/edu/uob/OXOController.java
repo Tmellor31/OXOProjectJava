@@ -8,7 +8,7 @@ public class OXOController {
     public OXOController(OXOModel model) {
         gameModel = model;
     }
-
+//Make it so row and col cannot be removed when something is on them, probs via 2 methods, check win thres decrease draw.
     public void handleIncomingCommand(String command) throws OXOMoveException {
         int currentPlayer = gameModel.getCurrentPlayerNumber();
         OXOPlayer movingPlayer = gameModel.getPlayerByNumber(currentPlayer);
