@@ -87,8 +87,19 @@ public class OXOModel {
     public void removeRow() {
         if (cells.size() > 1) {
             int finalRow = cells.size() - 1;
-            cells.remove(finalRow);
+            ArrayList<OXOPlayer> row = cells.get(finalRow);
+            boolean containsNull = false;
+            for (OXOPlayer cell : row) {
+                if (cell != null) {
+                    containsNull = true;
+                    break;
+                }
+            }
+            if (!containsNull) {
+                cells.remove(finalRow);
+            }
         }
+
         if (checkForDraw()) {
             setGameDrawn();
         }
@@ -96,15 +107,28 @@ public class OXOModel {
 
     public void removeColumn() {
         if (cells.get(0).size() > 1) {
-            for (int i = 0; i < cells.size(); i++) {
-                int finalCol = cells.get(i).size() - 1;
-                cells.get(i).remove(finalCol);
+            int finalCol = cells.get(0).size() - 1;
+            boolean containsNull = false;
+            for (ArrayList<OXOPlayer> row : cells) {
+                OXOPlayer cell = row.get(finalCol);
+                if (cell != null) {
+                    containsNull = true;
+                    break;
+                }
+            }
+            if (!containsNull) {
+                for (ArrayList<OXOPlayer> row : cells) {
+                    row.remove(finalCol);
+                }
             }
         }
+
         if (checkForDraw()) {
             setGameDrawn();
         }
+
     }
+
 
     public OXOPlayer getCellOwner(int rowNumber, int colNumber) {
         return cells.get(rowNumber).get(colNumber);
