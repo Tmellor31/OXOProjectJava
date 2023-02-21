@@ -39,7 +39,7 @@ public class OXOController {
         if (checkForWin()) {
             gameModel.setWinner(movingPlayer);
         }
-        if (checkForDraw()) {
+        if (gameModel.checkForDraw()) {
             gameModel.setGameDrawn();
         }
     }
@@ -146,29 +146,12 @@ public class OXOController {
         return false;
     }
 
-
-    public boolean checkForDraw() {
-        int rowCount = gameModel.getNumberOfRows();
-        int colCount = gameModel.getNumberOfColumns();
-        int emptyCells = 0;
-        for (int i = 0; i < rowCount; i++) {
-            for (int j = 0; j < colCount; j++) {
-                if (gameModel.getCellOwner(i, j) == null) {
-                    emptyCells++;
-                }
-            }
-        }
-        //Returns true if there is a draw and false otherwise
-        return emptyCells == 0;
-    }
-
-
     public void increaseWinThreshold() {
         gameModel.setWinThreshold(gameModel.getWinThreshold() + 1);
     }
 
     public void decreaseWinThreshold() {
-        if (gameModel.getWinThreshold() > 3 && checkForDraw()) {
+        if (gameModel.getWinThreshold() > 3 && gameModel.checkForDraw()) {
             gameModel.setWinThreshold((gameModel.getWinThreshold() - 1));
         }
     }

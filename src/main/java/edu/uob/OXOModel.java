@@ -89,6 +89,9 @@ public class OXOModel {
             int finalRow = cells.size() - 1;
             cells.remove(finalRow);
         }
+        if (checkForDraw()) {
+            setGameDrawn();
+        }
     }
 
     public void removeColumn() {
@@ -97,6 +100,9 @@ public class OXOModel {
                 int finalCol = cells.get(i).size() - 1;
                 cells.get(i).remove(finalCol);
             }
+        }
+        if (checkForDraw()) {
+            setGameDrawn();
         }
     }
 
@@ -138,6 +144,21 @@ public class OXOModel {
 
     public boolean isGameDrawn() {
         return gameDrawn;
+    }
+
+    public boolean checkForDraw() {
+        int rowCount = getNumberOfRows();
+        int colCount = getNumberOfColumns();
+        int emptyCells = 0;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < colCount; j++) {
+                if (getCellOwner(i, j) == null) {
+                    emptyCells++;
+                }
+            }
+        }
+        //Returns true if there is a draw and false otherwise
+        return emptyCells == 0;
     }
 
 }
