@@ -82,6 +82,21 @@ class ExampleControllerTests {
                 "winthreshold should not be able to decrease once the game has started" ;
         assertEquals(null, model.getWinner(), failedTestComment);
     }
+
+    @Test
+    void testWinPreventingInput() throws OXOMoveException {
+        //c2 should not be claimed as it is entered after a player has won
+        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a1"); // First player
+        sendCommandToController("b1"); // Second player
+        sendCommandToController("a2"); // First player
+        sendCommandToController("b2"); // Second player
+        sendCommandToController("a3"); // First player
+        sendCommandToController("c2"); // Second player - move should not activate
+
+        String failedCellComment = "c2 should not be claimed by a player as a player had already won when it was claimed";
+        assertEquals(null,model.getCellOwner(2,2), failedCellComment);  //Position of c2
+    }
     // Example of how to test for the throwing of exceptions
     @Test
     void testInvalidIdentifierException() throws OXOMoveException {

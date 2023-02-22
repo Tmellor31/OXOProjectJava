@@ -54,8 +54,8 @@ class FurtherTesting {
     }
 
     @Test
-    void testWinThresholdIncrease() throws OXOMoveException {
-        //Similar to previous test, but decreases winthres to 3 before the game
+    void testWinThresholdDecrease() throws OXOMoveException {
+        //Similar to previous test, but decreases winthres to 3 before the game, if test fails then it is not decreasing
         controller.decreaseWinThreshold();
         OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
         sendCommandToController("a1"); //First Player Move
