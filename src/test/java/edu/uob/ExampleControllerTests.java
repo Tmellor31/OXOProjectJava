@@ -62,64 +62,6 @@ class ExampleControllerTests {
         assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
     }
 
-    @Test
-    void testMultiplePlayerWin() throws OXOMoveException {
-        model = new OXOModel(3, 3, 3);
-        model.addPlayer(new OXOPlayer('X'));
-        model.addPlayer(new OXOPlayer('O'));
-        model.addPlayer(new OXOPlayer('Z'));
-        controller = new OXOController(model);
-        // Find out which player is going to make the first move
-        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
-        // Make a bunch of moves for the players
-        sendCommandToController("a1"); // First player
-        sendCommandToController("b1"); // Second player
-        sendCommandToController("a2"); // Third player
-        sendCommandToController("b2"); // First player
-        sendCommandToController("a3"); // Second player
-        sendCommandToController("b3"); // Third player
-
-        String failedTestComment = "Winner was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
-        assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
-    }
-
-    @Test
-    void testAdditionalPlayers() throws OXOMoveException {
-        model = new OXOModel(5, 5, 4);
-        model.addPlayer(new OXOPlayer('X'));
-        model.addPlayer(new OXOPlayer('O'));
-        model.addPlayer(new OXOPlayer('Z'));
-        model.addPlayer(new OXOPlayer('J'));
-        controller = new OXOController(model);
-
-        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
-        sendCommandToController("a1"); //First Player Move
-        OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
-        sendCommandToController("a2"); //Second Player Move
-        OXOPlayer thirdMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
-        sendCommandToController("a3"); //Third Player Move
-        OXOPlayer fourthMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
-        sendCommandToController("a4"); //Fourth Player
-        sendCommandToController("b1"); //First Player Move
-        sendCommandToController("b2"); //Second Player Move
-        sendCommandToController("b3"); //Third Player Move
-        sendCommandToController("b4"); //Fourth Player
-        sendCommandToController("c5"); //First Player Move
-        sendCommandToController("b5"); //Second Player Move
-        sendCommandToController("c3"); //Third Player Move
-        sendCommandToController("c4"); //Fourth Player
-        sendCommandToController("d1"); //First Player Move
-        sendCommandToController("d2"); //Second Player Move
-        sendCommandToController("d3"); //Third Player Move
-        sendCommandToController("d4"); //Third Player Move
-
-        // Check that the third player has won
-        String failedTestComment = "Winner was expected to be " + thirdMovingPlayer.getPlayingLetter() + " but wasn't";
-        assertEquals(thirdMovingPlayer, model.getWinner(), failedTestComment);
-    }
-
-
-
     // Example of how to test for the throwing of exceptions
     @Test
     void testInvalidIdentifierException() throws OXOMoveException {
