@@ -88,14 +88,14 @@ public class OXOModel {
         if (cells.size() > 1) {
             int finalRow = cells.size() - 1;
             ArrayList<OXOPlayer> row = cells.get(finalRow);
-            boolean containsNull = false;
+            boolean containsDigit = false;
             for (OXOPlayer cell : row) {
                 if (cell != null) {
-                    containsNull = true;
+                    containsDigit = true;
                     break;
                 }
             }
-            if (!containsNull) {
+            if (!containsDigit) {
                 cells.remove(finalRow);
             }
         }
@@ -108,15 +108,15 @@ public class OXOModel {
     public void removeColumn() {
         if (cells.get(0).size() > 1) {
             int finalCol = cells.get(0).size() - 1;
-            boolean containsNull = false;
+            boolean containsDigit = false;
             for (ArrayList<OXOPlayer> row : cells) {
                 OXOPlayer cell = row.get(finalCol);
                 if (cell != null) {
-                    containsNull = true;
+                    containsDigit = true;
                     break;
                 }
             }
-            if (!containsNull) {
+            if (!containsDigit) {
                 for (ArrayList<OXOPlayer> row : cells) {
                     row.remove(finalCol);
                 }
