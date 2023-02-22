@@ -53,6 +53,33 @@ class FurtherTesting {
         assertEquals(thirdMovingPlayer, model.getWinner(), failedTestComment);
     }
 
+    @Test
+    void testWinThresholdIncrease() throws OXOMoveException {
+        //Similar to previous test, but decreases winthres to 3 before the game
+        controller.decreaseWinThreshold();
+        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a1"); //First Player Move
+        OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a2"); //Second Player Move
+        OXOPlayer thirdMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a3"); //Third Player Move
+        OXOPlayer fourthMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a4"); //Fourth Player
+        sendCommandToController("b1"); //First Player Move
+        sendCommandToController("b2"); //Second Player Move
+        sendCommandToController("b3"); //Third Player Move
+        sendCommandToController("b4"); //Fourth Player
+        sendCommandToController("c5"); //First Player Move
+        sendCommandToController("b5"); //Second Player Move
+        sendCommandToController("c3"); //Third Player Move
+        sendCommandToController("c4"); //Fourth Player
+
+        // Check that the third player has won
+        String failedTestComment = "Winner was expected to be " + thirdMovingPlayer.getPlayingLetter() + " but wasn't -" +
+                " winthreshold may not be decreasing before the game properly";
+        assertEquals(thirdMovingPlayer, model.getWinner(), failedTestComment);
+    }
+
     // This next method is a utility function that can be used by any of the test methods to _safely_ send a command to the controller
     void sendCommandToController(String command) {
         // Try to send a command to the server - call will timeout if it takes too long (in case the server enters an infinite loop)

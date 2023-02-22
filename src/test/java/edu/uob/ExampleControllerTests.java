@@ -62,6 +62,26 @@ class ExampleControllerTests {
         assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
     }
 
+    @Test
+    void testWinThresholdChanging() throws OXOMoveException {
+        /*Increases winthreshold before game and attempts to decrease it partway, if implemented
+        correctly it should not work and there should be no winner*/
+        model.addRow();
+        model.addColumn();
+        model.setWinThreshold(5);
+        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a1"); // First player
+        controller.decreaseWinThreshold();
+        controller.decreaseWinThreshold();
+        sendCommandToController("b1"); // Second player
+        sendCommandToController("a2"); // First player
+        sendCommandToController("b2"); // Second player
+        sendCommandToController("a3"); // First player
+
+        String failedTestComment = "No winner was expected due to the winthreshold being too high, but a winner was found -" +
+                "winthreshold should not be able to decrease once the game has started" ;
+        assertEquals(null, model.getWinner(), failedTestComment);
+    }
     // Example of how to test for the throwing of exceptions
     @Test
     void testInvalidIdentifierException() throws OXOMoveException {
