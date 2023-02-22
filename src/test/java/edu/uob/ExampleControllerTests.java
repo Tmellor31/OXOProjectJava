@@ -1,14 +1,12 @@
 package edu.uob;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-
 import edu.uob.OXOMoveException.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExampleControllerTests {
     private OXOModel model;
@@ -63,6 +61,29 @@ class ExampleControllerTests {
     }
 
     @Test
+    void testBasicReset() throws OXOMoveException {
+        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a1"); // First player
+        sendCommandToController("b1"); // Second player
+        sendCommandToController("a2"); // First player
+        sendCommandToController("b2"); // Second player
+        sendCommandToController("a3"); // First player
+
+        // a1, a2, a3 should be a win for the first player (since players alternate between moves)
+        // Let's check to see whether the first moving player is indeed the winner
+        String failedTestComment = "Winner was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
+        assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
+
+        controller.reset();
+
+        String failedToReset = "Board failed to reset, cells are still claimed";
+        assertEquals(null, model.getCellOwner(0,0), failedToReset);
+        assertEquals(null, model.getCellOwner(0,1), failedToReset);
+        assertEquals(null, model.getCellOwner(1,0), failedToReset);
+        assertEquals(null, model.getCellOwner(1,1), failedToReset);
+    }
+
+    @Test
     void testWinThresholdChanging() throws OXOMoveException {
         /*Increases winthreshold before game and attempts to decrease it partway, if implemented
         correctly it should not work and there should be no winner*/
@@ -96,6 +117,36 @@ class ExampleControllerTests {
 
         String failedCellComment = "c2 should not be claimed by a player as a player had already won when it was claimed";
         assertEquals(null,model.getCellOwner(2,2), failedCellComment);  //Position of c2
+    }
+
+    @Test
+    void testDrawWhileChangingBoard() throws OXOMoveException {
+        model.setWinThreshold(5);//So the game does not end due to win
+        OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+        sendCommandToController("a1"); // First player
+        sendCommandToController("b1"); // Second player
+        sendCommandToController("a2"); // First player
+        sendCommandToController("b2"); // Second player
+        sendCommandToController("a3"); // First player
+        sendCommandToController("b3"); // Second player
+        sendCommandToController("c1"); // First player
+        sendCommandToController("c2"); // Second player
+        sendCommandToController("c3"); // First player
+
+        String failedToDraw = "Should have been a draw";
+        assertEquals(model.isGameDrawn(),true,failedToDraw);
+
+        model.addRow();
+        model.addColumn();
+
+        String removeDraw = "Draw status should be removed after increasing board size";
+        assertEquals(model.isGameDrawn(),false,removeDraw);
+
+        model.removeRow();
+        model.removeColumn();
+
+        String failedToRedraw = "Draw should have been reactivated after shrinking board";
+        assertEquals(model.isGameDrawn(),true, failedToRedraw);
     }
     // Example of how to test for the throwing of exceptions
     @Test
