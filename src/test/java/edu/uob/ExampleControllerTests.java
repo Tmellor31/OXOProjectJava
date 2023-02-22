@@ -157,4 +157,33 @@ class ExampleControllerTests {
         assertThrows(InvalidIdentifierLengthException.class, () -> sendCommandToController("abc123"), failedTestComment);
         assertThrows(InvalidIdentifierLengthException.class, () -> controller.handleIncomingCommand("aa1"));
     }
+
+    @Test
+    void testCellAlreadyTakenException() throws OXOMoveException {
+        sendCommandToController("a1");
+        // Check that the controller throws a suitable exception when it gets a command for a cell which is claimed
+        String failedTestComment = "Controller failed to throw an CellAlreadyTaken Exception for command a1";
+        assertThrows(CellAlreadyTakenException.class, () -> sendCommandToController("a1"), failedTestComment);
+    }
+
+    @Test
+    void testInvalidIdentifierCharacterException() throws OXOMoveException {
+        // Check that the controller throws a suitable exception when it gets an invalid command
+        String failedLetterTest = "Controller failed to throw an InvalidIdentifierCharacterException for z1";
+        assertThrows(InvalidIdentifierCharacterException.class, () -> sendCommandToController("z1"), failedLetterTest);
+        String failedSpecialCharacterTest = "Controller failed to throw an InvalidIdentifierCharacterException for a!";
+        assertThrows(InvalidIdentifierCharacterException.class, () -> sendCommandToController("a!"), failedSpecialCharacterTest);
+    }
+
+    @Test
+    void testOutsideCellRangeException() throws OXOMoveException {
+        // Check that the controller throws a suitable exception when you try to enter a command unfit for a 3x3 board
+        String failedOutsideRowTest = "Controller failed to throw an OutsideCellRangeException for i1 despite it being" +
+                "a 3x3 board";
+        assertThrows(OutsideCellRangeException.class, () -> sendCommandToController("i1"), failedOutsideRowTest);
+        String failedOutsideColTest = "Controller failed to throw an OutsideCellRangeException for a9 despite it being" +
+                "a 3x3 board";
+        assertThrows(OutsideCellRangeException.class, () -> sendCommandToController("a9"), failedOutsideColTest);
+    }
 }
+

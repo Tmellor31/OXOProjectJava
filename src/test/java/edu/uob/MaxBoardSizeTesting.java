@@ -44,8 +44,11 @@ public class MaxBoardSizeTesting {
         sendCommandToController("g2"); //Second Player Move
         sendCommandToController("h1"); //First Player Move
         sendCommandToController("h2"); //Second Player Move
+
+        //Check that winthreshold cannot be decreased midgame
         String failedWinDecreaseCheck = "The win threshold was decreased midgame - this should not be possible";
         assertEquals(null, model.getWinner(), failedWinDecreaseCheck);
+
         sendCommandToController("h3"); //First Player Move
         sendCommandToController("i2"); //Winning Move for P2
 
