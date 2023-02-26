@@ -151,18 +151,18 @@ public class OXOController {
     }
 
     public void decreaseWinThreshold() {
-        if (gameModel.getWinThreshold() > 3 && gameModel.checkForClearBoard() == 0 || gameModel.getWinner() != null) //Can only be decreased if game hasn't started or a winner has been found
+        if ((gameModel.getWinThreshold() > 3) && gameModel.checkForClearBoard() == 0 || gameModel.getWinner() != null) //Can only be decreased if game hasn't started or a winner has been found
         {
             gameModel.setWinThreshold((gameModel.getWinThreshold() - 1));
         }
     }
 
     public void reset() {
-        int rowcount;
-        int colcount;
-        for (rowcount = 0; rowcount < gameModel.getNumberOfRows(); rowcount++) {
-            for (colcount = 0; colcount < gameModel.getNumberOfColumns(); colcount++) {
-                gameModel.setCellOwner(rowcount, colcount, null);
+        int rowCount;
+        int colCount;
+        for (rowCount = 0; rowCount < gameModel.getNumberOfRows(); rowCount++) {
+            for (colCount = 0; colCount < gameModel.getNumberOfColumns(); colCount++) {
+                gameModel.setCellOwner(rowCount, colCount, null);
             }
         }
         gameModel.setCurrentPlayerNumber(0);
